@@ -1,0 +1,1026 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Recomp">
+<meta name="theme-color" content="#0F0F0D">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.svg">
+<title>My Recomp Plan</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0F0F0D;
+  --surface: #1A1A17;
+  --surface2: #232320;
+  --border: #2E2E2A;
+  --text: #F0EFE8;
+  --muted: #7A7870;
+  --dim: #4A4844;
+  --teal: #1D9E75;
+  --teal-dim: #0D4A36;
+  --teal-text: #5ECDA4;
+  --amber: #D4900A;
+  --amber-dim: #4A3205;
+  --amber-text: #F5C842;
+  --purple: #7B72E0;
+  --purple-dim: #2A2660;
+  --purple-text: #B0A8F5;
+  --coral: #C4501A;
+  --coral-dim: #4A1E08;
+  --coral-text: #F5956A;
+  --blue: #2A7ED4;
+  --blue-dim: #0C2E52;
+  --blue-text: #7AB8F5;
+  --green: #5A9E1A;
+  --green-dim: #1E3808;
+  --green-text: #A2D46A;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+html, body {
+  height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  overflow: hidden;
+}
+
+/* ── LAYOUT ── */
+#app {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  height: 100dvh;
+}
+
+/* ── HEADER ── */
+#header {
+  padding: calc(var(--safe-top) + 14px) 20px 14px;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.header-inner { display: flex; align-items: flex-end; justify-content: space-between; }
+
+#header h1 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 22px;
+  font-weight: 400;
+  color: var(--text);
+  letter-spacing: -0.2px;
+}
+
+.goal-badge {
+  font-size: 11px;
+  font-weight: 500;
+  background: var(--teal-dim);
+  color: var(--teal-text);
+  padding: 4px 10px;
+  border-radius: 20px;
+  letter-spacing: 0.02em;
+}
+
+/* ── SCROLL AREA ── */
+#scroll {
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: calc(var(--safe-bottom) + 70px);
+}
+
+/* ── NAV ── */
+#nav {
+  position: fixed;
+  bottom: 0;
+  left: 0; right: 0;
+  background: rgba(15, 15, 13, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid var(--border);
+  display: flex;
+  padding-bottom: var(--safe-bottom);
+  z-index: 100;
+}
+
+.nav-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px 4px 8px;
+  cursor: pointer;
+  gap: 4px;
+  opacity: 0.4;
+  transition: opacity 0.15s;
+}
+
+.nav-item.active { opacity: 1; }
+.nav-item.active .nav-icon { color: var(--teal-text); }
+.nav-item.active .nav-label { color: var(--teal-text); }
+
+.nav-icon { font-size: 20px; line-height: 1; }
+.nav-label { font-size: 10px; font-weight: 500; color: var(--muted); letter-spacing: 0.04em; text-transform: uppercase; }
+
+/* ── PAGES ── */
+.page { display: none; }
+.page.active { display: block; }
+
+/* ── SECTION LABEL ── */
+.slabel {
+  font-size: 10px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--dim);
+  padding: 22px 18px 8px;
+}
+
+/* ── CARDS ── */
+.card {
+  background: var(--surface);
+  border-radius: 14px;
+  margin: 0 12px 10px;
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+
+.card-tap {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 16px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.card-tap-left { display: flex; align-items: center; gap: 12px; }
+
+.dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+.dot-teal { background: var(--teal); }
+.dot-blue { background: var(--blue); }
+.dot-purple { background: var(--purple); }
+.dot-coral { background: var(--coral); }
+.dot-green { background: var(--green); }
+.dot-amber { background: var(--amber); }
+.dot-dim { background: var(--dim); }
+
+.card-eyebrow { font-size: 11px; color: var(--muted); font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em; }
+.card-title { font-family: 'DM Serif Display', serif; font-size: 18px; color: var(--text); margin-top: 1px; }
+.card-sub { font-size: 12px; color: var(--muted); margin-top: 2px; font-weight: 300; }
+
+.tags { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 6px; }
+.tag { font-size: 10px; font-weight: 500; padding: 2px 8px; border-radius: 20px; letter-spacing: 0.02em; }
+.tag-teal { background: var(--teal-dim); color: var(--teal-text); }
+.tag-blue { background: var(--blue-dim); color: var(--blue-text); }
+.tag-purple { background: var(--purple-dim); color: var(--purple-text); }
+.tag-coral { background: var(--coral-dim); color: var(--coral-text); }
+.tag-green { background: var(--green-dim); color: var(--green-text); }
+.tag-amber { background: var(--amber-dim); color: var(--amber-text); }
+.tag-dim { background: var(--surface2); color: var(--muted); }
+
+.chev {
+  color: var(--dim);
+  font-size: 16px;
+  transition: transform 0.2s;
+  flex-shrink: 0;
+}
+.chev.open { transform: rotate(180deg); }
+
+.card-body { display: none; border-top: 1px solid var(--border); }
+.card-body.open { display: block; }
+
+/* ── EXERCISE SECTIONS ── */
+.ex-sec { padding: 14px 16px; border-bottom: 1px solid var(--border); }
+.ex-sec:last-child { border-bottom: none; }
+.ex-sec-label { font-size: 10px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.08em; color: var(--dim); margin-bottom: 10px; }
+
+.ex-list { list-style: none; }
+.ex-item { display: flex; align-items: flex-start; gap: 10px; padding: 9px 0; border-bottom: 1px solid var(--border); }
+.ex-item:first-child { padding-top: 0; }
+.ex-item:last-child { border-bottom: none; padding-bottom: 0; }
+
+.ex-num {
+  width: 22px; height: 22px; border-radius: 50%;
+  background: var(--surface2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 500; color: var(--muted);
+  flex-shrink: 0; margin-top: 1px;
+}
+.ex-num.g { background: var(--green-dim); color: var(--green-text); }
+.ex-num.a { background: var(--amber-dim); color: var(--amber-text); }
+
+.ex-name { font-size: 14px; font-weight: 500; color: var(--text); }
+.ex-detail { font-size: 12px; color: var(--muted); margin-top: 2px; font-weight: 300; line-height: 1.55; }
+
+/* ── TIPS ── */
+.tip {
+  background: var(--surface2);
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.65;
+}
+.tip strong { color: var(--text); }
+.tip.g { background: var(--green-dim); color: var(--green-text); }
+.tip.g strong { color: #D4F5A0; }
+.tip.t { background: var(--teal-dim); color: var(--teal-text); }
+.tip.t strong { color: #A0F0D4; }
+
+/* ── GOAL BANNER ── */
+.goal-banner {
+  margin: 14px 12px 10px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
+}
+.goal-banner::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, var(--teal), var(--purple), var(--blue));
+}
+.goal-banner h2 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 20px;
+  font-weight: 400;
+  color: var(--text);
+  margin-bottom: 5px;
+}
+.goal-banner p { font-size: 12px; color: var(--muted); line-height: 1.6; font-weight: 300; }
+
+.goal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 14px; }
+.goal-item { background: var(--surface2); border-radius: 10px; padding: 12px; }
+.goal-lbl { font-size: 10px; color: var(--dim); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; }
+.goal-val { font-size: 19px; font-weight: 500; font-family: 'DM Serif Display', serif; }
+.goal-sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+/* ── STAT ROW ── */
+.stat-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  background: var(--surface);
+  border-radius: 14px;
+  margin: 0 12px 10px;
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+.stat { text-align: center; padding: 14px 6px; border-right: 1px solid var(--border); }
+.stat:last-child { border-right: none; }
+.stat-val { font-family: 'DM Serif Display', serif; font-size: 22px; color: var(--text); }
+.stat-lbl { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; margin-top: 2px; font-weight: 500; }
+
+/* ── COMP BARS ── */
+.flat-card { background: var(--surface); border-radius: 14px; margin: 0 12px 10px; border: 1px solid var(--border); padding: 18px; }
+.bar-wrap { margin-bottom: 14px; }
+.bar-wrap:last-child { margin-bottom: 0; }
+.bar-header { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 5px; }
+.bar-label { font-weight: 500; color: var(--text); }
+.bar-val { color: var(--muted); font-size: 12px; }
+.bar-track { background: var(--surface2); border-radius: 4px; height: 8px; overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 4px; }
+.bar-note { font-size: 11px; color: var(--dim); margin-top: 3px; }
+
+/* ── NUT ROWS ── */
+.nut-row { display: flex; justify-content: space-between; align-items: center; padding: 11px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
+.nut-row:last-child { border-bottom: none; }
+.nut-label { color: var(--muted); font-weight: 300; }
+.nut-val { font-weight: 500; }
+
+/* ── HIGHLIGHTS ── */
+.hl { background: var(--teal-dim); border-radius: 10px; padding: 12px 14px; font-size: 12px; color: var(--teal-text); line-height: 1.6; }
+
+/* ── MOVEMENT PREP BANNER ── */
+.prep-banner {
+  background: var(--green-dim);
+  border: 1px solid rgba(90,158,26,0.3);
+  border-radius: 12px;
+  margin: 14px 12px 10px;
+  padding: 14px 16px;
+}
+.prep-banner h4 { font-size: 13px; font-weight: 500; color: var(--green-text); margin-bottom: 4px; }
+.prep-banner p { font-size: 12px; color: var(--green); line-height: 1.6; }
+.prep-pills { display: flex; gap: 6px; margin-top: 10px; }
+.prep-pill { flex: 1; background: rgba(255,255,255,0.06); border-radius: 8px; padding: 8px 4px; text-align: center; border: 1px solid rgba(90,158,26,0.25); }
+.prep-pill-t { font-size: 10px; font-weight: 500; color: var(--green-text); text-transform: uppercase; letter-spacing: 0.04em; }
+.prep-pill-s { font-size: 10px; color: var(--green); margin-top: 2px; }
+
+/* ── PHASE STRIP ── */
+.phase-strip { display: flex; gap: 6px; margin-top: 12px; }
+.phase-pill { flex: 1; border-radius: 8px; padding: 10px 6px; text-align: center; }
+.phase-pill-t { font-size: 10px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.04em; }
+.phase-pill-d { font-size: 10px; margin-top: 2px; opacity: 0.7; }
+
+/* ── PROGRESS ── */
+.progress-card { background: var(--surface); border-radius: 14px; margin: 0 12px 10px; border: 1px solid var(--border); padding: 18px; }
+.progress-card h3 { font-family: 'DM Serif Display', serif; font-size: 18px; margin-bottom: 4px; color: var(--text); }
+.progress-card p { font-size: 12px; color: var(--muted); margin-bottom: 14px; font-weight: 300; line-height: 1.5; }
+.milestone { display: flex; align-items: flex-start; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+.milestone:last-child { border-bottom: none; }
+.ms-dot { width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 500; flex-shrink: 0; color: white; }
+.ms-title { font-size: 14px; font-weight: 500; color: var(--text); }
+.ms-detail { font-size: 12px; color: var(--muted); margin-top: 2px; font-weight: 300; line-height: 1.5; }
+
+/* ── DARK BANNER ── */
+.dark-banner {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  margin: 14px 12px 10px;
+  padding: 20px;
+}
+.dark-banner h3 { font-family: 'DM Serif Display', serif; font-size: 19px; font-weight: 400; margin-bottom: 5px; color: var(--text); }
+.dark-banner p { font-size: 12px; color: var(--muted); line-height: 1.6; font-weight: 300; }
+
+/* ── INSTALL BANNER ── */
+#install-banner {
+  display: none;
+  background: var(--teal-dim);
+  border: 1px solid rgba(29,158,117,0.4);
+  border-radius: 12px;
+  margin: 14px 12px 0;
+  padding: 14px 16px;
+  font-size: 13px;
+  color: var(--teal-text);
+  line-height: 1.6;
+}
+#install-banner strong { color: #A0F0D4; display: block; margin-bottom: 2px; }
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- HEADER -->
+  <div id="header">
+    <div class="header-inner">
+      <h1>Recomp Plan</h1>
+      <span class="goal-badge">Goal A · 125 lbs</span>
+    </div>
+  </div>
+
+  <!-- SCROLL -->
+  <div id="scroll">
+
+    <!-- ══════════════ OVERVIEW ══════════════ -->
+    <div id="p-overview" class="page active">
+
+      <div id="install-banner">
+        <strong>Add to home screen</strong>
+        Tap the share button below, then "Add to Home Screen" to install this as an app.
+      </div>
+
+      <div class="goal-banner">
+        <h2>Goal A — body recomposition</h2>
+        <p>Lose 10.8 lbs of fat. Gain 1.8 lbs of muscle. Build athletic mobility alongside strength. Net scale change: only 3 lbs — but a completely different body.</p>
+        <div class="goal-grid">
+          <div class="goal-item"><div class="goal-lbl">Start</div><div class="goal-val">128 lbs</div><div class="goal-sub">30.8% body fat</div></div>
+          <div class="goal-item"><div class="goal-lbl">Goal</div><div class="goal-val" style="color:var(--teal-text)">125 lbs</div><div class="goal-sub">22–24% body fat</div></div>
+          <div class="goal-item"><div class="goal-lbl">Fat to lose</div><div class="goal-val" style="color:var(--coral-text)">−10.8 lbs</div><div class="goal-sub">39.6 → 28.8 lbs</div></div>
+          <div class="goal-item"><div class="goal-lbl">Muscle to gain</div><div class="goal-val" style="color:var(--blue-text)">+1.8 lbs</div><div class="goal-sub">48.3 → 50.1 lbs</div></div>
+        </div>
+      </div>
+
+      <div class="slabel">InBody scan results</div>
+      <div class="flat-card">
+        <div class="bar-wrap">
+          <div class="bar-header"><span class="bar-label">Body fat</span><span class="bar-val">39.6 lbs · 30.8%</span></div>
+          <div class="bar-track"><div class="bar-fill" style="width:30.8%;background:#e34948;"></div></div>
+          <div class="bar-note">Athletic range: 18–25% · Target: 28.8 lbs</div>
+        </div>
+        <div class="bar-wrap">
+          <div class="bar-header"><span class="bar-label">Skeletal muscle</span><span class="bar-val">48.3 lbs · 37.7%</span></div>
+          <div class="bar-track"><div class="bar-fill" style="width:37.7%;background:var(--blue);"></div></div>
+          <div class="bar-note">Strong for your size. Protect and build this.</div>
+        </div>
+        <div class="bar-wrap">
+          <div class="bar-header"><span class="bar-label">Total body water</span><span class="bar-val">64.8 lbs · 50.6%</span></div>
+          <div class="bar-track"><div class="bar-fill" style="width:50.6%;background:var(--teal);"></div></div>
+          <div class="bar-note">Normal — reflects good muscle hydration.</div>
+        </div>
+        <div class="bar-wrap">
+          <div class="bar-header"><span class="bar-label">Dry lean mass</span><span class="bar-val">23.8 lbs · 18.6%</span></div>
+          <div class="bar-track"><div class="bar-fill" style="width:18.6%;background:var(--dim);"></div></div>
+          <div class="bar-note">Organs, bone, tissue. Stable — not a target.</div>
+        </div>
+        <div class="hl" style="margin-top:14px;">BMR: <strong>1,239 kcal</strong> · TDEE: <strong>~2,000 kcal</strong> · Target: <strong>1,800–1,850 kcal/day</strong></div>
+      </div>
+
+      <div class="slabel">Key principles</div>
+      <div class="flat-card">
+        <div class="nut-row"><span class="nut-label">Strength training</span><span class="nut-val" style="color:var(--blue-text)">4 days/week</span></div>
+        <div class="nut-row"><span class="nut-label">Athletic mobility + lateral</span><span class="nut-val" style="color:var(--green-text)">Every session</span></div>
+        <div class="nut-row"><span class="nut-label">Progressive overload</span><span class="nut-val">Add weight/reps weekly</span></div>
+        <div class="nut-row"><span class="nut-label">HIIT / plyo max</span><span class="nut-val" style="color:var(--coral-text)">2× per week</span></div>
+        <div class="nut-row"><span class="nut-label">Protein</span><span class="nut-val" style="color:var(--teal-text)">110–120g/day</span></div>
+        <div class="nut-row"><span class="nut-label">Calorie deficit</span><span class="nut-val">150–200 kcal/day</span></div>
+        <div class="nut-row"><span class="nut-label">InBody rescan</span><span class="nut-val">Every 8 weeks</span></div>
+        <div class="nut-row"><span class="nut-label">Weigh in</span><span class="nut-val">Cycle days 2–5 only</span></div>
+        <div class="nut-row"><span class="nut-label">Timeline</span><span class="nut-val">5–6 months</span></div>
+      </div>
+
+    </div>
+
+    <!-- ══════════════ SCHEDULE ══════════════ -->
+    <div id="p-schedule" class="page">
+
+      <div class="stat-row" style="margin-top:14px;">
+        <div class="stat"><div class="stat-val">5–6</div><div class="stat-lbl">Days/week</div></div>
+        <div class="stat"><div class="stat-val">4</div><div class="stat-lbl">Lift days</div></div>
+        <div class="stat"><div class="stat-val">2×</div><div class="stat-lbl">HIIT max</div></div>
+      </div>
+
+      <div class="prep-banner">
+        <h4>Movement prep — every lifting day · 6–8 min</h4>
+        <p>Replaces the generic warm-up on Mon, Wed, Fri, Sat. Full protocols in the Mobility tab.</p>
+        <div class="prep-pills">
+          <div class="prep-pill"><div class="prep-pill-t">Lateral</div><div class="prep-pill-s">Band walks</div></div>
+          <div class="prep-pill"><div class="prep-pill-t">Hip + ankle</div><div class="prep-pill-s">Mobility drills</div></div>
+          <div class="prep-pill"><div class="prep-pill-t">Activation</div><div class="prep-pill-s">Glutes + core</div></div>
+        </div>
+      </div>
+
+      <!-- MONDAY -->
+      <div class="slabel">Monday</div>
+      <div class="card">
+        <div class="card-tap" onclick="tog(this)">
+          <div class="card-tap-left"><div class="dot dot-blue"></div><div>
+            <div class="card-eyebrow">Strength day 1</div>
+            <div class="card-title">Lower body + plyo</div>
+            <div class="tags"><span class="tag tag-blue">Weights</span><span class="tag tag-green">Plyo</span><span class="tag tag-coral">Metabolic finish</span></div>
+          </div></div>
+          <span class="chev">⌄</span>
+        </div>
+        <div class="card-body">
+          <div class="ex-sec">
+            <div class="ex-sec-label">Movement prep · 6–8 min</div>
+            <ul class="ex-list">
+              <li class="ex-item"><div class="ex-num g">→</div><div><div class="ex-name">Full lower body prep</div><div class="ex-detail">Lateral band walks · Hip 90/90 · Ankle CARs · Glute bridge activation — see Mobility tab</div></div></li>
+            </ul>
+          </div>
+          <div class="ex-sec">
+            <div class="ex-sec-label">Strength · ~30 min · Log weights</div>
+            <ul class="ex-list">
+              <li class="ex-item"><div class="ex-num">1</div><div><div class="ex-name">Barbell back squat</div><div class="ex-detail">4 × 8–10 · Rest 90s · Full depth · Priority lift — add weight when last set feels easy</div></div></li>
+              <li class="ex-item"><div class="ex-num">2</div><div><div class="ex-name">Romanian deadlift</div><div class="ex-detail">3 × 10 · Rest 75s · 3-count eccentric · Feel hamstrings load</div></div></li>
+              <li class="ex-item"><div class="ex-num">3</div><div><div class="ex-name">Lateral lunge with reach</div><div class="ex-detail">3 × 10/side · Dumbbell reach to foot · Loads adductors + hip mobility simultaneously</div></div></li>
+              <li class="ex-item"><div class="ex-num">4</div><div><div class="ex-name">Hip thrusts</div><div class="ex-detail">3 × 15 · Barbell or dumbbell · Full squeeze at top · Rest 60s</div></div></li>
+            </ul>
+          </div>
+          <div class="ex-sec">
+            <div class="ex-sec-label">Plyo block · 3 rounds · 45s rest</div>
+            <ul class="ex-list">
+              <li class="ex-item"><div class="ex-num g">A</div><div><div class="ex-name">Lateral bound (skater jump)</div><div class="ex-detail">8/side · Push off one foot, land softly on other · Stick each landing 1–2s</div></div></li>
+              <li class="ex-item"><div class="ex-num g">B</div><div><div class="ex-name">Box jump</div><div class="ex-detail">6 reps · Explode up, land soft · Step down · Focus on landing, not height</div></div></li>
+              <li class="ex-item"><div class="ex-num g">C</div><div><div class="ex-name">Lateral shuffle + squat</div><div class="ex-detail">3 shuffles each direction → 1 squat · 8 reps</div></div></li>
+            </ul>
+          </div>
+          <div class="ex-sec">
+            <div class="ex-sec-label">Metabolic finish · 8 min</div>
+            <ul class="ex-list">
+              <li class="ex-item"><div class="ex-num">🔥</div><div><div class="ex-name">Kettlebell swing HIIT</div><div class="ex-detail">30s on / 30s rest × 8 rounds · Hip hinge drive — not arms</div></div></li>
+            </ul>
+          </div>
+          <div class="ex-sec"><div class="tip"><strong>Recomp note:</strong> Compound lower body moves burn the most calories and build the glute/leg shape that makes you look leaner. Add weight here before any other day.</div></div>
+        </div>
+      </div>
+
+      <!-- TUESDAY -->
+      <div class="slabel">Tuesday</div>
+      <div class="card">
+        <div class="card-tap" onclick="tog(this)">
+          <div class="card-tap-left"><div class="dot dot-green"></div><div>
+            <div class="card-eyebrow">Athletic mobility day</div>
+            <div class="card-title">Lateral movement + core</div>
+            <div class="tags"><span class="tag tag-green">Mobility</span><span class="tag tag-green">Lateral</span><span class="tag tag-teal">Zone 2</span></div>
+          </div></div>
+          <span class="chev">⌄</span>
+        </div>
+        <div class="card-body">
+          <div class="ex-sec">
+            <div class="ex-sec-label">Zone 2 cardio · 20 min</div>
+            <ul class="ex-list">
+              <li class="ex-item"><div class="ex-num">—</div><div><div class="ex-name">Steady-state cardio</div><div class="ex-detail">Bike, incline walk, or row · 60–70% max HR · Conversational pace — this is warm-up today, not the main event</div></div></li>
+            </ul>
+          </div>
+          <div class="ex-sec">
+            <div class="ex-sec-label">Athletic mobility circuit · 3 rounds</div>
+            <ul class="ex-list">
+              <li class="ex-item"><div class="ex-num g">1</div><div><div class="ex-name">Lateral band walk</div><div class="ex-detail">20 steps each direction · Medium band above knees · Stay low, chest up</div></div></li>
+              <li class="ex-item"><div class="ex-num g">2</div><div><div class="ex-name">Cossack squat</div><div class="ex-detail">8/side · Deep lateral squat — shift weight to one leg, other leg straight</div></div></li>
+              <li class="ex-item"><div class="ex-num g">3</div><div><div class="ex-name">Lateral step-up with knee drive</div><div class="ex-detail">10/side · Step onto box from the side · Drive opposite knee up at top</div></div></li>
+              <li class="ex-item"><div class="ex-num g">4</div><div><div class="ex-name">Hip 90/90 flow</div><div class="ex-detail">8/side · Rotate between internal and external hip rotation · Slow and controlled</div></div></li>
+              <li class="ex-item"><div class="ex-num g">5</div><div><div class="ex-name">World's greatest stretch</div><div class="ex-detail">5/side · Lunge forward → elbow to floor → rotate and reach to ceiling</div></div></li>
+              <li class="ex-item"><div class="ex-num g">6</div><div><div class="ex-name">Lateral plyo shuffle</div><div class="ex-detail">10m each direction × 6 · Increase speed each round · Light and reactive</div></div></li>
+            </ul>
+          </div>
+          <div class="ex-sec">
+            <div class="ex-sec-label">Core · 2 rounds</div>
+            <ul class="ex-list">
+              <li class="ex-item"><div class="ex-num">1</div><div><div class="ex-name">Dead bugs</div><div class="ex-detail">3 × 12 · Lower back pressed to floor · Slow and controlled</div></div></li>
+              <li class="ex-item"><div class="ex-num">2</div><div><div class="ex-name">Pallof press</div><div class="ex-detail">3 × 12/side · Cable or band · Anti-rotation</div></div></li>
+              <li class="ex-item"><div class="ex-num">3</div><div><div class="ex-name">Copenhagen plank</div><div class="ex-detail">3 × 20s/side · Top foot on bench · Loads adductors and obliques</div></div></li>
+              <li class="ex-item"><div class="ex-num">4</div><div><div class="ex-name">Cable chop (high to low)</div><div class="ex-detail">3 × 10/side · Full rotational movement · Diagonal athletic pattern</div></div></li>
+            </ul>
+          </div>
+          <div class="ex-sec"><div class="tip g"><strong>Why this matters:</strong> Lateral and rotational work recruits stabilizer muscles your lifting days miss — the small muscles that make everything else stronger, safer, and more coordinated.</div></div>
+        </div>
+      </div>
+
+      <!-- WEDNESDAY -->
+      <div class="slabel">Wednesday</div>
+      <div class="card">
+        <div class="card-tap" onclick="tog(this)">
+          <div class="card-tap-left"><div class="dot dot-blue"></div><div>
+            <div class="card-eyebrow">Strength day 2</div>
+            <div class="card-title">Upper body + rotational</div>
+            <div class="tags"><span class="tag tag-blue">Weights</span><span class="tag tag-green">Rotational</span><span class="tag tag-coral">Finish</span></div>
+          </div></div>
+          <span class="chev">⌄</span>
+        </div>
+        <div class="card-body">
+          <div class="ex-sec">
+            <div class="ex-sec-label">Movement prep · 6–8 min</div>
+            <ul class="ex-list">
+              <li class="ex-item"><div class="ex-num g">→</div><div><div class="ex-name">Upper body prep</div><div class="ex-detail">Thoracic rotation · Shoulder CARs · Band pull-aparts · Cat-cow — see Mobility tab</div></div></li>
+            </ul>
+          </div>
+          <div class="ex-sec">
+            <div class="ex-sec-label">Main work · ~35 min · Log weights</div>
+            <ul class="ex-list">
+              <li class="ex-item"><div class="ex-num">1</div><div><div class="ex-name">Bench press or chest press</div><div class="ex-detail">4 × 8–10 · Rest 90s · Builds pec muscle under breast tissue</div></div></li>
+              <li class="ex-item"><div class="ex-num">2</div><div><div class="ex-name">Bent-over barbell row</div><div class="ex-detail">4 × 8 · Hinge at hips · Pull to lower chest · Rest 90s</div></div></li>
+              <li class="ex-item"><div class="ex-num">3</div><div><div class="ex-name">Dumbbell shoulder press</div><div class="ex-detail">3 × 10 · Seated or standing · Rest 75s</div></div></li>
+              <li class="ex-item"><div class="ex-num">4</div><div><div class="ex-name">Lat pulldown</div><div class="ex-detail">3 × 12 · Wide grip · Pull to upper chest · Rest 60s</div></div></li>
+              <li class="ex-item"><div class="ex-num">5</div><div><div class="ex-name">Single-arm cable row (rotational)</div><div class="ex-detail">3 × 12/side · Allow slight torso rotation at end range</div></div></li>
+              <li class="ex-item"><div class="ex-num">6</div><div><div class="ex-name">Tricep dips or pushdowns</div><div class="ex-detail">3 × 12 · Rest 60s</div></div></li>
+            </ul>
+          </div>
+          <div class="ex-sec">
+            <div class="ex-sec-label">Rotational power · 2 rounds</div>
+            <ul class="ex-list">
+              <li class="ex-item"><div class="ex-num g">A</div><div><div class="ex-name">Med ball rotational slam</div><div class="ex-detail">8/side · Stand sideways to wall, rotate and slam · Explosive rotational power</div></div></li>
+              <li class="ex-item"><div class="ex-num g">B</div><div><div class="ex-name">Cable woodchop</div><div class="ex-detail">10/side · High-to-low diagonal · Full thoracic rotation</div></div></li>
+            </ul>
+          </div>
+          <div class="ex-sec">
+            <div class="ex-sec-label">Metabolic finish · 8 min AMRAP</div>
+            <ul class="ex-list">
+              <li class="ex-item"><div class="ex-num">🔥</div><div><div class="ex-name">Mini circuit</div><div class="ex-detail">5 push-ups → 10 mountain climbers → 8 lateral skater jumps · Repeat</div></div></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- THURSDAY -->
+      <div class="slabel">Thursday</div>
+      <div class="card">
+        <div class="card-tap" onclick="tog(this)">
+          <div class="card-tap-left"><div class="dot dot-purple"></div><div>
+            <div class="card-eyebrow">Recovery + deep mobility</div>
+            <div class="card-title">Yoga or mat Pilates</div>
+            <div class="tags"><span class="tag tag-purple">Recovery</span><span class="tag tag-purple">Deep core</span><span class="tag tag-green">Mobility</span></div>
+          </div></div>
+          <span class="chev">⌄</span>
+        </div>
+        <div class="card-body">
+          <div class="ex-sec">
+            <ul class="ex-list">
+              <li class="ex-item"><div class="ex-num">✓</div><div><div class="ex-name">Your regular class</div><div class="ex-detail">Tuesday builds range and lateral capacity. Thursday trains your nervous system to control those ranges under slow, deliberate load. One without the other is incomplete.</div></div></li>
+            </ul>
+          </div>
+          <div class="ex-sec"><div class="tip"><strong>Don't swap this for cardio.</strong> This day manages cortisol — the hormone that, when elevated, directly drives abdominal fat storage in women. It's doing more for your core goal than an extra cardio session would.</div></div>
+        </div>
+      </div>
+
+      <!-- FRIDAY -->
+      <div class="slabel">Friday</div>
+      <div class="card">
+        <div class="card-tap" onclick="tog(this)">
+          <div class="card-tap-left"><div class="dot dot-coral"></div><div>
+            <div class="card-eyebrow">Strength day 3 · Highest burn</div>
+            <div class="card-title">Full body plyo + HIIT</div>
+            <div class="tags"><span class="tag tag-coral">HIIT</span><span class="tag tag-green">Plyo</span><span class="tag tag-blue">Full body</span></div>
+          </div></div>
+          <span class="chev">⌄</span>
+        </div>
+        <div class="card-body">
+          <div class="ex-sec">
+            <div class="ex-sec-label">Movement prep · 6–8 min</div>
+            <ul class="ex-list">
+              <li class="ex-item"><div class="ex-num g">→</div><div><div class="ex-name">Full prep + ankle focus</div><div class="ex-detail">Extra emphasis on ankle mobility and hip flexor prep — you'll be jumping and landing</div></div></li>
+            </ul>
+          </div>
+          <div class="ex-sec">
+            <div class="ex-sec-label">Plyo-strength circuit · 4 rounds · 60s rest</div>
+            <ul class="ex-list">
+              <li class="ex-item"><div class="ex-num">1</div><div><div class="ex-name">Goblet squat</div><div class="ex-detail">10 reps · Slow and controlled · Builds base for the jump that follows</div></div></li>
+              <li class="ex-item"><div class="ex-num g">2</div><div><div class="ex-name">Broad jump</div><div class="ex-detail">5 reps · Jump forward as far as possible · Stick landing · Walk back</div></div></li>
+              <li class="ex-item"><div class="ex-num">3</div><div><div class="ex-name">Push-up</div><div class="ex-detail">10 reps · Modify on knees if needed</div></div></li>
+              <li class="ex-item"><div class="ex-num g">4</div><div><div class="ex-name">Lateral cone hop or skater jump</div><div class="ex-detail">8/side · Single-leg landing · Stick each rep · Core lateral plyo pattern</div></div></li>
+              <li class="ex-item"><div class="ex-num">5</div><div><div class="ex-name">Dumbbell row</div><div class="ex-detail">10/side · Single arm · Brace core · Row to hip</div></div></li>
+              <li class="ex-item"><div class="ex-num g">6</div><div><div class="ex-name">Reactive shuffle + sprint</div><div class="ex-detail">3 shuffles each direction → 5m sprint · 6 reps · Direction change and deceleration</div></div></li>
+            </ul>
+          </div>
+          <div class="ex-sec">
+            <div class="ex-sec-label">HIIT finish · 12 min</div>
+            <ul class="ex-list">
+              <li class="ex-item"><div class="ex-num">🔥</div><div><div class="ex-name">Treadmill intervals</div><div class="ex-detail">45s fast / 75s walk · ~7 rounds · Push hard on the "on" intervals</div></div></li>
+            </ul>
+          </div>
+          <div class="ex-sec"><div class="tip"><strong>Plyo rule:</strong> Weeks 1–4, focus on landing quality. Weeks 5–8, add distance/height. Weeks 9+, add speed and reactivity. Never sacrifice landing mechanics for more reps.</div></div>
+        </div>
+      </div>
+
+      <!-- SATURDAY -->
+      <div class="slabel">Saturday</div>
+      <div class="card">
+        <div class="card-tap" onclick="tog(this)">
+          <div class="card-tap-left"><div class="dot dot-blue"></div><div>
+            <div class="card-eyebrow">Strength day 4</div>
+            <div class="card-title">Posterior chain + mobility</div>
+            <div class="tags"><span class="tag tag-blue">Weights</span><span class="tag tag-green">Cooldown</span></div>
+          </div></div>
+          <span class="chev">⌄</span>
+        </div>
+        <div class="card-body">
+          <div class="ex-sec">
+            <div class="ex-sec-label">Movement prep · 6–8 min</div>
+            <ul class="ex-list">
+              <li class="ex-item"><div class="ex-num g">→</div><div><div class="ex-name">Hip hinge focus prep</div><div class="ex-detail">Extra emphasis on hip hinge pattern and hamstring activation before deadlift</div></div></li>
+            </ul>
+          </div>
+          <div class="ex-sec">
+            <div class="ex-sec-label">Main work · ~35 min</div>
+            <ul class="ex-list">
+              <li class="ex-item"><div class="ex-num">1</div><div><div class="ex-name">Conventional deadlift</div><div class="ex-detail">4 × 6 · Heaviest lift of the week · Rest 2 min · Record weight every session</div></div></li>
+              <li class="ex-item"><div class="ex-num">2</div><div><div class="ex-name">Bulgarian split squat</div><div class="ex-detail">3 × 10/leg · Rear foot elevated · Dumbbell each hand · Rest 75s</div></div></li>
+              <li class="ex-item"><div class="ex-num">3</div><div><div class="ex-name">Single-leg Romanian deadlift</div><div class="ex-detail">3 × 8/leg · Posterior chain strength + single-leg balance + hip stability</div></div></li>
+              <li class="ex-item"><div class="ex-num">4</div><div><div class="ex-name">Lying hamstring curl</div><div class="ex-detail">3 × 12 · Don't let hips lift · Rest 60s</div></div></li>
+              <li class="ex-item"><div class="ex-num">5</div><div><div class="ex-name">Weighted step-ups</div><div class="ex-detail">3 × 12/leg · Box at knee height · Dumbbell each hand</div></div></li>
+            </ul>
+          </div>
+          <div class="ex-sec">
+            <div class="ex-sec-label">Mobility cooldown · 10 min</div>
+            <ul class="ex-list">
+              <li class="ex-item"><div class="ex-num g">→</div><div><div class="ex-name">Post-lift mobility flow</div><div class="ex-detail">Pigeon pose · Figure-4 · Hip flexor lunge · Seated hamstring · Thoracic foam roll · Child's pose lat reach — see Mobility tab · Hold 45–60s each</div></div></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- SUNDAY -->
+      <div class="slabel">Sunday</div>
+      <div class="card">
+        <div class="card-tap" onclick="tog(this)">
+          <div class="card-tap-left"><div class="dot dot-dim"></div><div>
+            <div class="card-eyebrow">Full rest</div>
+            <div class="card-title">Recovery day</div>
+            <div class="tags"><span class="tag tag-dim">Rest</span><span class="tag tag-green">Gentle mobility</span></div>
+          </div></div>
+          <span class="chev">⌄</span>
+        </div>
+        <div class="card-body">
+          <div class="ex-sec">
+            <ul class="ex-list">
+              <li class="ex-item"><div class="ex-num">—</div><div><div class="ex-name">Walk, foam roll, or 10 min gentle mobility</div><div class="ex-detail">Nothing structured. If you want to move, 5–10 min of the hip and thoracic flows from the Mobility tab is perfect — low effort, high recovery benefit.</div></div></li>
+            </ul>
+          </div>
+          <div class="ex-sec"><div class="tip"><strong>Rest is training.</strong> Muscle is built and fat is lost during recovery. 7–8 hours of sleep is a direct recomp tool.</div></div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ══════════════ MOBILITY ══════════════ -->
+    <div id="p-mobility" class="page">
+
+      <div class="dark-banner">
+        <h3>Athletic mobility system</h3>
+        <p>Three components woven into every week: movement prep before lifting, lateral + plyo work on Tue and Fri, and a cooldown after Saturday. Strength and mobility progress together.</p>
+      </div>
+
+      <div class="slabel">Movement prep — lower body days (Mon, Sat)</div>
+      <div class="card">
+        <div class="card-tap" onclick="tog(this)">
+          <div class="card-tap-left"><div class="dot dot-green"></div><div>
+            <div class="card-eyebrow">Daily protocol · 6–8 min</div>
+            <div class="card-title">Hip, ankle + lateral activation</div>
+          </div></div>
+          <span class="chev">⌄</span>
+        </div>
+        <div class="card-body">
+          <div class="ex-sec">
+            <ul class="ex-list">
+              <li class="ex-item"><div class="ex-num g">1</div><div><div class="ex-name">Lateral band walk</div><div class="ex-detail">15 steps each direction · Band above knees · Stay low · Wakes glute medius for lateral stability</div></div></li>
+              <li class="ex-item"><div class="ex-num g">2</div><div><div class="ex-name">Hip 90/90 rotations</div><div class="ex-detail">8/side · On floor, both knees at 90° · Rotate hips side to side · Unlocks hip internal + external rotation</div></div></li>
+              <li class="ex-item"><div class="ex-num g">3</div><div><div class="ex-name">Ankle circles + dorsiflexion</div><div class="ex-detail">10 circles each direction → knee-to-wall stretch 30s/side · Ankle mobility is the #1 limiting factor for squat depth</div></div></li>
+              <li class="ex-item"><div class="ex-num g">4</div><div><div class="ex-name">Glute bridge with abduction</div><div class="ex-detail">10 reps · Band above knees · Bridge up, push knees out at top · Activates glutes in both sagittal and lateral plane</div></div></li>
+              <li class="ex-item"><div class="ex-num g">5</div><div><div class="ex-name">World's greatest stretch</div><div class="ex-detail">4/side · Lunge → elbow to floor → rotate and reach · Hits hips, thoracic spine, and ankle in one move</div></div></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="slabel">Movement prep — upper body days (Wed, Fri)</div>
+      <div class="card">
+        <div class="card-tap" onclick="tog(this)">
+          <div class="card-tap-left"><div class="dot dot-green"></div><div>
+            <div class="card-eyebrow">Daily protocol · 6–8 min</div>
+            <div class="card-title">Thoracic + shoulder prep</div>
+          </div></div>
+          <span class="chev">⌄</span>
+        </div>
+        <div class="card-body">
+          <div class="ex-sec">
+            <ul class="ex-list">
+              <li class="ex-item"><div class="ex-num g">1</div><div><div class="ex-name">Thoracic rotation (quadruped)</div><div class="ex-detail">8/side · Hand behind head, rotate elbow to ceiling · Opens thoracic spine for pressing and rowing</div></div></li>
+              <li class="ex-item"><div class="ex-num g">2</div><div><div class="ex-name">Shoulder CARs</div><div class="ex-detail">5 slow circles each direction · Full range, no compensation · Lubricates shoulder joint before load</div></div></li>
+              <li class="ex-item"><div class="ex-num g">3</div><div><div class="ex-name">Band pull-apart</div><div class="ex-detail">15 reps · Arms straight, pull band to chest width · Activates rear delts and mid-traps</div></div></li>
+              <li class="ex-item"><div class="ex-num g">4</div><div><div class="ex-name">Cat-cow + thread the needle</div><div class="ex-detail">8 cat-cow → 5 thread the needle/side · Warms the entire spine for rotation</div></div></li>
+              <li class="ex-item"><div class="ex-num g">5</div><div><div class="ex-name">Dead hang or lat stretch</div><div class="ex-detail">20–30s · Decompresses spine and opens lats before pulling movements</div></div></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="slabel">Plyo progression · Weeks 1–24</div>
+      <div class="card">
+        <div class="card-tap" onclick="tog(this)">
+          <div class="card-tap-left"><div class="dot dot-amber"></div><div>
+            <div class="card-eyebrow">3 phases · Progress safely</div>
+            <div class="card-title">Plyo phases</div>
+            <div class="tags"><span class="tag tag-amber">Phase 1</span><span class="tag tag-amber">Phase 2</span><span class="tag tag-amber">Phase 3</span></div>
+          </div></div>
+          <span class="chev">⌄</span>
+        </div>
+        <div class="card-body">
+          <div class="ex-sec">
+            <div class="ex-sec-label">Phase 1 · Weeks 1–6 · Landing mechanics</div>
+            <ul class="ex-list">
+              <li class="ex-item"><div class="ex-num a">1</div><div><div class="ex-name">Focus: stick every landing</div><div class="ex-detail">Knees track over toes, hips absorb impact. Quality over height or distance. If you can't stick the landing, the load is too high.</div></div></li>
+              <li class="ex-item"><div class="ex-num a">2</div><div><div class="ex-name">Drills: box jump, broad jump, lateral bound</div><div class="ex-detail">Low box. Short distances. Full recovery between reps (5–8s). Learn the patterns before loading them.</div></div></li>
+            </ul>
+          </div>
+          <div class="ex-sec">
+            <div class="ex-sec-label">Phase 2 · Weeks 7–14 · Load and distance</div>
+            <ul class="ex-list">
+              <li class="ex-item"><div class="ex-num a">1</div><div><div class="ex-name">Add height, distance, and reps</div><div class="ex-detail">Increase box height. Jump farther. Add a rep to lateral bounds. Still full recovery between reps.</div></div></li>
+              <li class="ex-item"><div class="ex-num a">2</div><div><div class="ex-name">Introduce reactive drills</div><div class="ex-detail">Lateral shuffle + sprint. Cone hops. Reduce rest slightly (3–4s). Begin training continuous lateral movement.</div></div></li>
+            </ul>
+          </div>
+          <div class="ex-sec">
+            <div class="ex-sec-label">Phase 3 · Weeks 15+ · Speed and reactivity</div>
+            <ul class="ex-list">
+              <li class="ex-item"><div class="ex-num a">1</div><div><div class="ex-name">Continuous hops, reactive direction change</div><div class="ex-detail">No stick between lateral hops. Reactive shuffles off a visual or auditory cue. True athletic movement quality.</div></div></li>
+              <li class="ex-item"><div class="ex-num a">2</div><div><div class="ex-name">Add weighted plyo</div><div class="ex-detail">Light dumbbell goblet jump squat, weighted lateral bound. Only add load once bodyweight form is clean at speed.</div></div></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="slabel">Mobility cooldown — Saturday · 10 min</div>
+      <div class="card">
+        <div class="card-tap" onclick="tog(this)">
+          <div class="card-tap-left"><div class="dot dot-green"></div><div>
+            <div class="card-eyebrow">Post-lift · When tissue is warmest</div>
+            <div class="card-title">Post-lift mobility flow</div>
+            <div class="tags"><span class="tag tag-green">Hip</span><span class="tag tag-green">Hamstring</span><span class="tag tag-green">Thoracic</span></div>
+          </div></div>
+          <span class="chev">⌄</span>
+        </div>
+        <div class="card-body">
+          <div class="ex-sec">
+            <div class="ex-sec-label">Hold 45–60s each · Both sides</div>
+            <ul class="ex-list">
+              <li class="ex-item"><div class="ex-num g">1</div><div><div class="ex-name">Pigeon pose</div><div class="ex-detail">45–60s/side · Most important post-lower-body hip mobility stretch</div></div></li>
+              <li class="ex-item"><div class="ex-num g">2</div><div><div class="ex-name">Figure-4 (reclined pigeon)</div><div class="ex-detail">45s/side · On back, ankle on opposite knee · Gentler alternative</div></div></li>
+              <li class="ex-item"><div class="ex-num g">3</div><div><div class="ex-name">Low lunge hip flexor stretch</div><div class="ex-detail">45s/side · Back knee down, reach arms up · Counters hip flexor tightening from squats and deadlifts</div></div></li>
+              <li class="ex-item"><div class="ex-num g">4</div><div><div class="ex-name">Seated hamstring stretch</div><div class="ex-detail">45s/side · Leg straight, hinge from hip not spine</div></div></li>
+              <li class="ex-item"><div class="ex-num g">5</div><div><div class="ex-name">Thoracic foam roll</div><div class="ex-detail">60s · Roller perpendicular to spine at mid-back · Arms crossed · Extend gently · Reverses forward rounding from lifting</div></div></li>
+              <li class="ex-item"><div class="ex-num g">6</div><div><div class="ex-name">Child's pose with lat reach</div><div class="ex-detail">30s each side · Walk hands right, hold, walk left · Opens lats after heavy pulling</div></div></li>
+            </ul>
+          </div>
+          <div class="ex-sec"><div class="tip g"><strong>Why post-workout:</strong> Muscle and fascia are warmest and most pliable after training. This is when stretching actually increases range of motion long-term.</div></div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ══════════════ NUTRITION ══════════════ -->
+    <div id="p-nutrition" class="page">
+
+      <div class="slabel" style="padding-top:20px;">Calorie targets</div>
+      <div class="flat-card">
+        <div class="hl" style="margin-bottom:14px;">Based on your InBody BMR of 1,239 kcal</div>
+        <div class="nut-row"><span class="nut-label">BMR (InBody)</span><span class="nut-val">1,239 kcal</span></div>
+        <div class="nut-row"><span class="nut-label">Estimated TDEE</span><span class="nut-val">~2,000 kcal</span></div>
+        <div class="nut-row"><span class="nut-label">Daily recomp target</span><span class="nut-val" style="color:var(--teal-text)">1,800–1,850 kcal</span></div>
+        <div class="nut-row"><span class="nut-label">Heavy training days</span><span class="nut-val">1,850 kcal</span></div>
+        <div class="nut-row"><span class="nut-label">Rest / light days</span><span class="nut-val">1,750 kcal</span></div>
+        <div class="nut-row"><span class="nut-label">Deficit</span><span class="nut-val">150–200 kcal/day</span></div>
+      </div>
+
+      <div class="slabel">Macro priorities</div>
+      <div class="flat-card">
+        <div class="nut-row"><span class="nut-label">Protein — non-negotiable</span><span class="nut-val" style="color:var(--teal-text)">110–120g/day</span></div>
+        <div class="nut-row"><span class="nut-label">Carbs</span><span class="nut-val">Higher on lift + plyo days</span></div>
+        <div class="nut-row"><span class="nut-label">Fat</span><span class="nut-val">Fill remaining calories</span></div>
+        <div class="nut-row"><span class="nut-label">Track with</span><span class="nut-val">Cronometer or MyFitnessPal</span></div>
+      </div>
+
+      <div class="slabel">High-protein foods</div>
+      <div class="flat-card">
+        <div class="nut-row"><span class="nut-label">Chicken breast (150g)</span><span class="nut-val">~45g</span></div>
+        <div class="nut-row"><span class="nut-label">Salmon fillet (150g)</span><span class="nut-val">~34g</span></div>
+        <div class="nut-row"><span class="nut-label">Greek yogurt (200g)</span><span class="nut-val">~17g</span></div>
+        <div class="nut-row"><span class="nut-label">Cottage cheese (150g)</span><span class="nut-val">~18g</span></div>
+        <div class="nut-row"><span class="nut-label">Eggs (2 large)</span><span class="nut-val">~12g</span></div>
+        <div class="nut-row"><span class="nut-label">Lentils (200g cooked)</span><span class="nut-val">~18g</span></div>
+        <div class="nut-row"><span class="nut-label">Edamame (150g)</span><span class="nut-val">~18g</span></div>
+        <div class="nut-row"><span class="nut-label">Protein shake</span><span class="nut-val">~25g</span></div>
+      </div>
+
+      <div class="slabel">Key reminders</div>
+      <div class="flat-card">
+        <div class="tip" style="margin-bottom:10px;"><strong>Don't eat too little.</strong> Eating significantly below 1,750 kcal tells your body to slow metabolism and hold fat — the opposite of your goal.</div>
+        <div class="tip" style="margin-bottom:10px;"><strong>Fuel plyo and lift days.</strong> Eat complex carbs (oats, rice, sweet potato) before Friday and Monday. Plyo is carb-dependent.</div>
+        <div class="tip"><strong>Sleep is nutrition.</strong> Less than 7 hours raises hunger hormones and blunts muscle building. Treat it like a macro.</div>
+      </div>
+
+    </div>
+
+    <!-- ══════════════ CYCLE ══════════════ -->
+    <div id="p-cycle" class="page">
+
+      <div class="dark-banner">
+        <h3>Train with your hormones</h3>
+        <p>Adjust intensity across your cycle. The structure stays the same — the effort and plyo intensity shifts with your phase.</p>
+        <div class="phase-strip">
+          <div class="phase-pill" style="background:var(--teal-dim);"><div class="phase-pill-t" style="color:var(--teal-text)">Power</div><div class="phase-pill-d" style="color:var(--teal-text)">Days 1–14</div></div>
+          <div class="phase-pill" style="background:var(--amber-dim);"><div class="phase-pill-t" style="color:var(--amber-text)">Peak</div><div class="phase-pill-d" style="color:var(--amber-text)">Days 12–16</div></div>
+          <div class="phase-pill" style="background:var(--purple-dim);"><div class="phase-pill-t" style="color:var(--purple-text)">Ease</div><div class="phase-pill-d" style="color:var(--purple-text)">Days 15–28</div></div>
+        </div>
+      </div>
+
+      <div class="slabel">Follicular phase · Days 1–14</div>
+      <div class="card">
+        <div class="card-tap" onclick="tog(this)">
+          <div class="card-tap-left"><div class="dot dot-teal"></div><div>
+            <div class="card-eyebrow">Your power window</div>
+            <div class="card-title">Go heavier + full plyo</div>
+            <div class="tags"><span class="tag tag-teal">PRs here</span><span class="tag tag-teal">Full intensity</span></div>
+          </div></div>
+          <span class="chev">⌄</span>
+        </div>
+        <div class="card-body">
+          <div class="ex-sec">
+            <ul class="ex-list">
+              <li class="ex-item"><div class="ex-num">✓</div><div><div class="ex-name">Push heavier weights</div><div class="ex-detail">Estrogen rising = strength and recovery optimized. Attempt PRs. Nervous system is most responsive — athletic adaptations are fastest here.</div></div></li>
+              <li class="ex-item"><div class="ex-num">✓</div><div><div class="ex-name">Full plyo intensity</div><div class="ex-detail">Do the complete Tuesday and Friday plyo protocols. Add speed and reactivity. Increase box height and jump distance.</div></div></li>
+              <li class="ex-item"><div class="ex-num">✓</div><div><div class="ex-name">Slightly lower carbs ok</div><div class="ex-detail">Higher insulin sensitivity means your body uses carbs efficiently — you don't need as many to perform well.</div></div></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="slabel">Ovulation · Days 12–16</div>
+      <div class="card">
+        <div class="card-tap" onclick="tog(this)">
+          <div class="card-tap-left"><div class="dot dot-amber"></div><div>
+            <div class="card-eyebrow">Peak performance</div>
+            <div class="card-title">Highest energy window</div>
+            <div class="tags"><span class="tag tag-amber">Peak strength</span><span class="tag tag-amber">Best cardio</span></div>
+          </div></div>
+          <span class="chev">⌄</span>
+        </div>
+        <div class="card-body">
+          <div class="ex-sec">
+            <ul class="ex-list">
+              <li class="ex-item"><div class="ex-num">✓</div><div><div class="ex-name">Peak strength and energy</div><div class="ex-detail">Estrogen at its highest. Great time for a max effort run or heavy lift day.</div></div></li>
+              <li class="ex-item"><div class="ex-num">⚠</div><div><div class="ex-name">Warm up thoroughly</div><div class="ex-detail">Ligament laxity is slightly higher around ovulation — warm up well before explosive or heavy movements. Plyo landing mechanics matter most right now.</div></div></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="slabel">Luteal phase · Days 15–28</div>
+      <div class="card">
+        <div class="card-tap" onclick="tog(this)">
+          <div class="card-tap-left"><div class="dot dot-purple"></div><div>
+            <div class="card-eyebrow">Ease back intelligently</div>
+            <div class="card-title">Reduce plyo + more mobility</div>
+            <div class="tags"><span class="tag tag-purple">Less HIIT</span><span class="tag tag-purple">More Zone 2</span></div>
+          </div></div>
+          <span class="chev">⌄</span>
+        </div>
+        <div class="card-body">
+          <div class="ex-sec">
+            <ul class="ex-list">
+              <li class="ex-item"><div class="ex-num">↓</div><div><div class="ex-name">Reduce plyo volume ~30%</div><div class="ex-detail">Fewer rounds, lower height. Ligament laxity is higher — slow down and stick every landing. Quality over quantity.</div></div></li>
+              <li class="ex-item"><div class="ex-num">↓</div><div><div class="ex-name">Swap Friday HIIT for Zone 2</div><div class="ex-detail">Replace treadmill intervals with 20 min incline walk or bike. Keep the circuit, remove the sprints.</div></div></li>
+              <li class="ex-item"><div class="ex-num">+</div><div><div class="ex-name">Extend mobility cooldown</div><div class="ex-detail">Add 5 min to Saturday's cooldown. Your body responds particularly well to passive stretching in this phase.</div></div></li>
+              <li class="ex-item"><div class="ex-num">+</div><div><div class="ex-name">Eat 100–200 more calories</div><div class="ex-detail">Your resting metabolic rate is genuinely higher. Eat toward 1,850–1,950 kcal. This is biology, not cheating.</div></div></li>
+              <li class="ex-item"><div class="ex-num">⚠</div><div><div class="ex-name">Scale unreliable · 2–4 lbs water</div><div class="ex-detail">Normal. Drops when your period starts. Do not adjust your plan based on this number.</div></div></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ══════════════ PROGRESS ══════════════ -->
+    <div id="p-progress" class="page">
+
+      <div class="slabel" style="padding-top:20px;">How to track your recomp</div>
+      <div class="flat-card">
+        <div class="tip"><strong>The scale is not your primary metric.</strong> You could stay at 128 lbs for 6 weeks while losing fat and gaining muscle simultaneously. Use these four methods together.</div>
+      </div>
+
+      <div class="progress-card">
+        <h3>Tracking methods</h3>
+        <p>Use all four together for an accurate picture.</p>
+        <div class="milestone"><div class="ms-dot" style="background:var(--teal)">1</div><div><div class="ms-title">InBody rescan</div><div class="ms-detail">Every 8 weeks. Your most important metric — shows actual fat loss and muscle gain regardless of scale weight. Schedule your next scan now.</div></div></div>
+        <div class="milestone"><div class="ms-dot" style="background:var(--blue)">2</div><div><div class="ms-title">Weekly scale</div><div class="ms-detail">Days 2–5 of your cycle only. Same time, same conditions. 4-week rolling average — single readings mean nothing.</div></div></div>
+        <div class="milestone"><div class="ms-dot" style="background:var(--purple)">3</div><div><div class="ms-title">Monthly measurements</div><div class="ms-detail">Waist, hips, chest, each thigh. Often change weeks before the scale moves.</div></div></div>
+        <div class="milestone"><div class="ms-dot" style="background:var(--amber)">4</div><div><div class="ms-title">Strength + mobility log</div><div class="ms-detail">Record every lift weight. Also note plyo milestones — first clean lateral bound stick, first broad jump PR. Athletic progress is part of your goal.</div></div></div>
+      </div>
+
+      <div class="progress-card">
+        <h3>Milestone timeline</h3>
+        <p>What to expect at each phase.</p>
+        <div class="milestone"><div class="ms-dot" style="background:var(--teal);font-size:9px;">W2</div><div><div class="ms-title">Weeks 1–2 · Adjustment</div><div class="ms-detail">Body adapts to new stimulus. Movement prep feels awkward at first — that's exactly the point. Plyo focus: landing mechanics only.</div></div></div>
+        <div class="milestone"><div class="ms-dot" style="background:var(--teal);font-size:9px;">W8</div><div><div class="ms-title">Week 8 · First InBody rescan</div><div class="ms-detail">Measurable fat loss expected. Lateral stability and landing quality noticeably better. Enter plyo Phase 2.</div></div></div>
+        <div class="milestone"><div class="ms-dot" style="background:var(--blue);font-size:9px;">W16</div><div><div class="ms-title">Week 16 · Second rescan</div><div class="ms-detail">Visibly leaner, stronger, and more coordinated. Plyo Phase 3 begins. Roughly halfway to body fat goal.</div></div></div>
+        <div class="milestone"><div class="ms-dot" style="background:var(--amber);font-size:9px;">W24</div><div><div class="ms-title">Week 24 · Goal range</div><div class="ms-detail">Target: 125 lbs · 22–24% body fat · 50.1 lbs muscle. Third InBody rescan confirms. Athletic, mobile, strong.</div></div></div>
+      </div>
+
+      <div class="slabel">Goal summary</div>
+      <div class="flat-card">
+        <div class="nut-row"><span class="nut-label">Start weight</span><span class="nut-val">128 lbs</span></div>
+        <div class="nut-row"><span class="nut-label">Goal weight</span><span class="nut-val" style="color:var(--teal-text)">125 lbs</span></div>
+        <div class="nut-row"><span class="nut-label">Start body fat</span><span class="nut-val">30.8% · 39.6 lbs</span></div>
+        <div class="nut-row"><span class="nut-label">Goal body fat</span><span class="nut-val" style="color:var(--teal-text)">22–24% · 28.8 lbs</span></div>
+        <div class="nut-row"><span class="nut-label">Start muscle</span><span class="nut-val">48.3 lbs</span></div>
+        <div class="nut-row"><span class="nut-label">Goal muscle</span><span class="nut-val" style="color:var(--teal-text)">50.1 lbs</span></div>
+        <div class="nut-row"><span class="nut-label">Timeline</span><span class="nut-val">5–6 months</span></div>
+        <div class="nut-row"><span class="nut-label">BMR</span><span class="nut-val">1,239 kcal</span></div>
+      </div>
+
+    </div>
+
+  </div><!-- /scroll -->
+
+  <!-- BOTTOM NAV -->
+  <div id="nav">
+    <div class="nav-item active" onclick="nav('overview',this)"><span class="nav-icon">◎</span><span class="nav-label">Overview</span></div>
+    <div class="nav-item" onclick="nav('schedule',this)"><span class="nav-icon">📅</span><span class="nav-label">Schedule</span></div>
+    <div class="nav-item" onclick="nav('mobility',this)"><span class="nav-icon">⚡</span><span class="nav-label">Mobility</span></div>
+    <div class="nav-item" onclick="nav('nutrition',this)"><span class="nav-icon">🥩</span><span class="nav-label">Nutrition</span></div>
+    <div class="nav-item" onclick="nav('cycle',this)"><span class="nav-icon">🌙</span><span class="nav-label">Cycle</span></div>
+    <div class="nav-item" onclick="nav('progress',this)"><span class="nav-icon">📈</span><span class="nav-label">Progress</span></div>
+  </div>
+
+</div>
+
+<script>
+// Register SW
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./sw.js').catch(() => {});
+}
+
+// Show install banner on iOS
+const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+const isStandalone = window.navigator.standalone === true;
+if (isIOS && !isStandalone) {
+  document.getElementById('install-banner').style.display = 'block';
+}
+
+function nav(id, el) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('p-' + id).classList.add('active');
+  el.classList.add('active');
+  document.getElementById('scroll').scrollTop = 0;
+}
+
+function tog(header) {
+  const body = header.nextElementSibling;
+  const chev = header.querySelector('.chev');
+  const open = body.classList.contains('open');
+  body.classList.toggle('open', !open);
+  chev.classList.toggle('open', !open);
+}
+</script>
+</body>
+</html>
