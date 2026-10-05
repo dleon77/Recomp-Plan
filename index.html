@@ -88,46 +88,45 @@ html, body {
   letter-spacing: 0.02em;
 }
 
-/* ── SCROLL AREA ── */
-#scroll {
-  flex: 1;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-  padding-bottom: calc(var(--safe-bottom) + 70px);
-}
-
 /* ── NAV ── */
 #nav {
-  position: fixed;
-  bottom: 0;
-  left: 0; right: 0;
-  background: rgba(15, 15, 13, 0.95);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-top: 1px solid var(--border);
   display: flex;
-  padding-bottom: var(--safe-bottom);
-  z-index: 100;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
 }
+#nav::-webkit-scrollbar { display: none; }
 
 .nav-item {
   flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 10px 4px 8px;
+  padding: 10px 4px 10px;
   cursor: pointer;
-  gap: 4px;
+  gap: 3px;
   opacity: 0.4;
   transition: opacity 0.15s;
+  min-width: 56px;
 }
 
 .nav-item.active { opacity: 1; }
 .nav-item.active .nav-icon { color: var(--teal-text); }
 .nav-item.active .nav-label { color: var(--teal-text); }
 
-.nav-icon { font-size: 20px; line-height: 1; }
-.nav-label { font-size: 10px; font-weight: 500; color: var(--muted); letter-spacing: 0.04em; text-transform: uppercase; }
+.nav-icon { font-size: 18px; line-height: 1; }
+.nav-label { font-size: 9px; font-weight: 500; color: var(--muted); letter-spacing: 0.04em; text-transform: uppercase; }
+
+/* ── SCROLL AREA ── */
+#scroll {
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: calc(var(--safe-bottom) + 16px);
+}
 
 /* ── PAGES ── */
 .page { display: none; }
@@ -369,6 +368,16 @@ html, body {
     </div>
   </div>
 
+  <!-- TOP NAV -->
+  <div id="nav">
+    <div class="nav-item active" onclick="nav('overview',this)"><span class="nav-icon">◎</span><span class="nav-label">Overview</span></div>
+    <div class="nav-item" onclick="nav('schedule',this)"><span class="nav-icon">📅</span><span class="nav-label">Schedule</span></div>
+    <div class="nav-item" onclick="nav('mobility',this)"><span class="nav-icon">⚡</span><span class="nav-label">Mobility</span></div>
+    <div class="nav-item" onclick="nav('nutrition',this)"><span class="nav-icon">🥩</span><span class="nav-label">Nutrition</span></div>
+    <div class="nav-item" onclick="nav('cycle',this)"><span class="nav-icon">🌙</span><span class="nav-label">Cycle</span></div>
+    <div class="nav-item" onclick="nav('progress',this)"><span class="nav-icon">📈</span><span class="nav-label">Progress</span></div>
+  </div>
+
   <!-- SCROLL -->
   <div id="scroll">
 
@@ -469,12 +478,20 @@ html, body {
             </ul>
           </div>
           <div class="ex-sec">
-            <div class="ex-sec-label">Strength · ~30 min · Log weights</div>
+            <div class="ex-sec-label">Glute activation · 5 min (part of movement prep)</div>
+            <ul class="ex-list">
+              <li class="ex-item"><div class="ex-num g">→</div><div><div class="ex-name">Sumo stance glute bridge pulses</div><div class="ex-detail">3 × 20 pulses · Band above knees · Wide stance, toes out · Pulse at top — pre-activates glute medius and maximus</div></div></li>
+              <li class="ex-item"><div class="ex-num g">→</div><div><div class="ex-name">Donkey kick + fire hydrant</div><div class="ex-detail">10 each / side · On all fours · Hits all three glute heads before lifting</div></div></li>
+            </ul>
+          </div>
+          <div class="ex-sec">
+            <div class="ex-sec-label">Strength · ~35 min · Log weights</div>
             <ul class="ex-list">
               <li class="ex-item"><div class="ex-num">1</div><div><div class="ex-name">Barbell back squat</div><div class="ex-detail">4 × 8–10 · Rest 90s · Full depth · Priority lift — add weight when last set feels easy</div></div></li>
               <li class="ex-item"><div class="ex-num">2</div><div><div class="ex-name">Romanian deadlift</div><div class="ex-detail">3 × 10 · Rest 75s · 3-count eccentric · Feel hamstrings load</div></div></li>
-              <li class="ex-item"><div class="ex-num">3</div><div><div class="ex-name">Lateral lunge with reach</div><div class="ex-detail">3 × 10/side · Dumbbell reach to foot · Loads adductors + hip mobility simultaneously</div></div></li>
-              <li class="ex-item"><div class="ex-num">4</div><div><div class="ex-name">Hip thrusts</div><div class="ex-detail">3 × 15 · Barbell or dumbbell · Full squeeze at top · Rest 60s</div></div></li>
+              <li class="ex-item"><div class="ex-num">3</div><div><div class="ex-name">Sumo deadlift + frog pump superset</div><div class="ex-detail">Sumo deadlift 3 × 10 (wide stance, toes out, chest up) → immediately 3 × 20 frog pumps (knees out, feet together) · Hits inner glute head not reached by conventional stance</div></div></li>
+              <li class="ex-item"><div class="ex-num">4</div><div><div class="ex-name">Hip thrusts</div><div class="ex-detail">4 × 15 · Barbell or dumbbell · Full squeeze and 2-count hold at top · Rest 60s · This is your #1 glute builder — go heavy</div></div></li>
+              <li class="ex-item"><div class="ex-num">5</div><div><div class="ex-name">Lateral lunge with reach</div><div class="ex-detail">3 × 10/side · Dumbbell reach to foot · Loads adductors + hip mobility simultaneously</div></div></li>
             </ul>
           </div>
           <div class="ex-sec">
@@ -489,6 +506,14 @@ html, body {
             <div class="ex-sec-label">Metabolic finish · 8 min</div>
             <ul class="ex-list">
               <li class="ex-item"><div class="ex-num">🔥</div><div><div class="ex-name">Kettlebell swing HIIT</div><div class="ex-detail">30s on / 30s rest × 8 rounds · Hip hinge drive — not arms</div></div></li>
+            </ul>
+          </div>
+          <div class="ex-sec">
+            <div class="ex-sec-label">Core finisher · 8 min</div>
+            <ul class="ex-list">
+              <li class="ex-item"><div class="ex-num">1</div><div><div class="ex-name">Weighted dead bug</div><div class="ex-detail">3 × 10/side · Light dumbbell in opposite hand · Back flat, slow and controlled · Deep core first</div></div></li>
+              <li class="ex-item"><div class="ex-num">2</div><div><div class="ex-name">Pallof press</div><div class="ex-detail">3 × 12/side · Band or cable · Anti-rotation hold · Builds the oblique wall</div></div></li>
+              <li class="ex-item"><div class="ex-num">3</div><div><div class="ex-name">Hollow body hold</div><div class="ex-detail">3 × 20–25s · Arms overhead, lower back pressed down, legs low · Lower ab and TVA target</div></div></li>
             </ul>
           </div>
           <div class="ex-sec"><div class="tip"><strong>Recomp note:</strong> Compound lower body moves burn the most calories and build the glute/leg shape that makes you look leaner. Add weight here before any other day.</div></div>
@@ -525,12 +550,12 @@ html, body {
             </ul>
           </div>
           <div class="ex-sec">
-            <div class="ex-sec-label">Core · 2 rounds</div>
+            <div class="ex-sec-label">Core finisher · 10 min · 2 rounds</div>
             <ul class="ex-list">
-              <li class="ex-item"><div class="ex-num">1</div><div><div class="ex-name">Dead bugs</div><div class="ex-detail">3 × 12 · Lower back pressed to floor · Slow and controlled</div></div></li>
-              <li class="ex-item"><div class="ex-num">2</div><div><div class="ex-name">Pallof press</div><div class="ex-detail">3 × 12/side · Cable or band · Anti-rotation</div></div></li>
-              <li class="ex-item"><div class="ex-num">3</div><div><div class="ex-name">Copenhagen plank</div><div class="ex-detail">3 × 20s/side · Top foot on bench · Loads adductors and obliques</div></div></li>
-              <li class="ex-item"><div class="ex-num">4</div><div><div class="ex-name">Cable chop (high to low)</div><div class="ex-detail">3 × 10/side · Full rotational movement · Diagonal athletic pattern</div></div></li>
+              <li class="ex-item"><div class="ex-num">1</div><div><div class="ex-name">Copenhagen plank</div><div class="ex-detail">3 × 25s/side · Top foot on bench · Adductors + obliques — lateral core muscles crunches never hit</div></div></li>
+              <li class="ex-item"><div class="ex-num">2</div><div><div class="ex-name">Cable chop (high to low)</div><div class="ex-detail">3 × 10/side · Full rotational movement · Diagonal pattern — trains core the way it actually moves in sport and life</div></div></li>
+              <li class="ex-item"><div class="ex-num">3</div><div><div class="ex-name">Farmer's carry</div><div class="ex-detail">3 × 20m · Heavy dumbbells or kettlebells · Walk tall — builds deep oblique and quadratus lumborum, the "carved waist" muscles</div></div></li>
+              <li class="ex-item"><div class="ex-num">4</div><div><div class="ex-name">Suitcase carry</div><div class="ex-detail">3 × 20m/side · One heavy weight · Body resists lateral lean — one of the best waist-defining moves, period</div></div></li>
             </ul>
           </div>
           <div class="ex-sec"><div class="tip g"><strong>Why this matters:</strong> Lateral and rotational work recruits stabilizer muscles your lifting days miss — the small muscles that make everything else stronger, safer, and more coordinated.</div></div>
@@ -543,8 +568,8 @@ html, body {
         <div class="card-tap" onclick="tog(this)">
           <div class="card-tap-left"><div class="dot dot-blue"></div><div>
             <div class="card-eyebrow">Strength day 2</div>
-            <div class="card-title">Upper body + rotational</div>
-            <div class="tags"><span class="tag tag-blue">Weights</span><span class="tag tag-green">Rotational</span><span class="tag tag-coral">Finish</span></div>
+            <div class="card-title">Upper body + arms + core</div>
+            <div class="tags"><span class="tag tag-blue">Weights</span><span class="tag tag-amber">Arm sculpt</span><span class="tag tag-coral">Core finish</span></div>
           </div></div>
           <span class="chev">⌄</span>
         </div>
@@ -563,7 +588,15 @@ html, body {
               <li class="ex-item"><div class="ex-num">3</div><div><div class="ex-name">Dumbbell shoulder press</div><div class="ex-detail">3 × 10 · Seated or standing · Rest 75s</div></div></li>
               <li class="ex-item"><div class="ex-num">4</div><div><div class="ex-name">Lat pulldown</div><div class="ex-detail">3 × 12 · Wide grip · Pull to upper chest · Rest 60s</div></div></li>
               <li class="ex-item"><div class="ex-num">5</div><div><div class="ex-name">Single-arm cable row (rotational)</div><div class="ex-detail">3 × 12/side · Allow slight torso rotation at end range</div></div></li>
-              <li class="ex-item"><div class="ex-num">6</div><div><div class="ex-name">Tricep dips or pushdowns</div><div class="ex-detail">3 × 12 · Rest 60s</div></div></li>
+            </ul>
+          </div>
+          <div class="ex-sec">
+            <div class="ex-sec-label">Arm sculpt superset · 3 rounds · 45s rest</div>
+            <ul class="ex-list">
+              <li class="ex-item"><div class="ex-num a">A1</div><div><div class="ex-name">Cable bicep curl</div><div class="ex-detail">3 × 12 · Straight bar or rope · Full extension at bottom, full squeeze at top · The arm move that actually changes shape</div></div></li>
+              <li class="ex-item"><div class="ex-num a">A2</div><div><div class="ex-name">Overhead tricep extension</div><div class="ex-detail">3 × 12 · Cable or dumbbell · Arms behind head · Targets the long head — the biggest tricep muscle, key for toned upper arms</div></div></li>
+              <li class="ex-item"><div class="ex-num a">B1</div><div><div class="ex-name">Lateral raise</div><div class="ex-detail">3 × 15 · Light dumbbells · Raise to shoulder height only · Builds the medial delt cap that makes arms look sculpted from the front</div></div></li>
+              <li class="ex-item"><div class="ex-num a">B2</div><div><div class="ex-name">Skull crusher</div><div class="ex-detail">3 × 12 · EZ bar or dumbbells · Lower to forehead, extend · Hits all three tricep heads — don't rush, feel the stretch</div></div></li>
             </ul>
           </div>
           <div class="ex-sec">
@@ -574,9 +607,11 @@ html, body {
             </ul>
           </div>
           <div class="ex-sec">
-            <div class="ex-sec-label">Metabolic finish · 8 min AMRAP</div>
+            <div class="ex-sec-label">Core finisher · 8 min</div>
             <ul class="ex-list">
-              <li class="ex-item"><div class="ex-num">🔥</div><div><div class="ex-name">Mini circuit</div><div class="ex-detail">5 push-ups → 10 mountain climbers → 8 lateral skater jumps · Repeat</div></div></li>
+              <li class="ex-item"><div class="ex-num">1</div><div><div class="ex-name">Ab wheel rollout</div><div class="ex-detail">3 × 8–10 · Slow rollout, pull back with abs not arms · Builds the deep six-pack without crunching</div></div></li>
+              <li class="ex-item"><div class="ex-num">2</div><div><div class="ex-name">Cable crunch</div><div class="ex-detail">3 × 15 · Kneel at cable, pull elbows to knees · Add weight over weeks — this is how abs get sculpted, not cardio</div></div></li>
+              <li class="ex-item"><div class="ex-num">3</div><div><div class="ex-name">Hollow body hold</div><div class="ex-detail">3 × 20–30s · Lower back to floor, arms overhead, legs low · Builds the "pulled in" look across the lower abs</div></div></li>
             </ul>
           </div>
         </div>
@@ -638,6 +673,14 @@ html, body {
               <li class="ex-item"><div class="ex-num">🔥</div><div><div class="ex-name">Treadmill intervals</div><div class="ex-detail">45s fast / 75s walk · ~7 rounds · Push hard on the "on" intervals</div></div></li>
             </ul>
           </div>
+          <div class="ex-sec">
+            <div class="ex-sec-label">Core finisher · 8 min</div>
+            <ul class="ex-list">
+              <li class="ex-item"><div class="ex-num">1</div><div><div class="ex-name">Hanging knee raise or captain's chair</div><div class="ex-detail">3 × 12 · Control the movement — don't swing · Targets lower abs which are hardest to reach</div></div></li>
+              <li class="ex-item"><div class="ex-num">2</div><div><div class="ex-name">Cable woodchop (low to high)</div><div class="ex-detail">3 × 10/side · Opposite direction from Wednesday · Hits obliques from both angles for full core definition</div></div></li>
+              <li class="ex-item"><div class="ex-num">3</div><div><div class="ex-name">Plank with arm reach</div><div class="ex-detail">3 × 10/side · Hold plank, extend one arm forward · Anti-rotation plus core endurance — functional and sculpting</div></div></li>
+            </ul>
+          </div>
           <div class="ex-sec"><div class="tip"><strong>Plyo rule:</strong> Weeks 1–4, focus on landing quality. Weeks 5–8, add distance/height. Weeks 9+, add speed and reactivity. Never sacrifice landing mechanics for more reps.</div></div>
         </div>
       </div>
@@ -648,8 +691,8 @@ html, body {
         <div class="card-tap" onclick="tog(this)">
           <div class="card-tap-left"><div class="dot dot-blue"></div><div>
             <div class="card-eyebrow">Strength day 4</div>
-            <div class="card-title">Posterior chain + mobility</div>
-            <div class="tags"><span class="tag tag-blue">Weights</span><span class="tag tag-green">Cooldown</span></div>
+            <div class="card-title">Posterior chain + glute burnout</div>
+            <div class="tags"><span class="tag tag-blue">Weights</span><span class="tag tag-amber">Glutes</span><span class="tag tag-coral">Core finish</span></div>
           </div></div>
           <span class="chev">⌄</span>
         </div>
@@ -668,6 +711,22 @@ html, body {
               <li class="ex-item"><div class="ex-num">3</div><div><div class="ex-name">Single-leg Romanian deadlift</div><div class="ex-detail">3 × 8/leg · Posterior chain strength + single-leg balance + hip stability</div></div></li>
               <li class="ex-item"><div class="ex-num">4</div><div><div class="ex-name">Lying hamstring curl</div><div class="ex-detail">3 × 12 · Don't let hips lift · Rest 60s</div></div></li>
               <li class="ex-item"><div class="ex-num">5</div><div><div class="ex-name">Weighted step-ups</div><div class="ex-detail">3 × 12/leg · Box at knee height · Dumbbell each hand</div></div></li>
+            </ul>
+          </div>
+          <div class="ex-sec">
+            <div class="ex-sec-label">Glute burnout · 10 min</div>
+            <ul class="ex-list">
+              <li class="ex-item"><div class="ex-num a">1</div><div><div class="ex-name">Frog pump</div><div class="ex-detail">3 × 30 · On back, soles of feet together, knees splayed · Pump hips up fast · Targets inner glute and hip abductors — fatigues the fibers squats miss</div></div></li>
+              <li class="ex-item"><div class="ex-num a">2</div><div><div class="ex-name">Banded clamshell</div><div class="ex-detail">3 × 20/side · Band above knees · On side, keep hips stacked · Glute medius isolation — builds the side glute that creates the round shape</div></div></li>
+              <li class="ex-item"><div class="ex-num a">3</div><div><div class="ex-name">Cable pull-through</div><div class="ex-detail">3 × 15 · Cable between legs, hinge and squeeze · Mimics the hip thrust pattern but standing — glute-hamstring tie-in</div></div></li>
+            </ul>
+          </div>
+          <div class="ex-sec">
+            <div class="ex-sec-label">Core finisher · 8 min</div>
+            <ul class="ex-list">
+              <li class="ex-item"><div class="ex-num">1</div><div><div class="ex-name">Ab wheel rollout</div><div class="ex-detail">3 × 8 · Slow and controlled · Pull back with abs — builds the deep rectus abdominis that crunches can't reach</div></div></li>
+              <li class="ex-item"><div class="ex-num">2</div><div><div class="ex-name">Russian twist (weighted)</div><div class="ex-detail">3 × 20 · Hold plate or dumbbell · Rotate fully each side · Oblique definition</div></div></li>
+              <li class="ex-item"><div class="ex-num">3</div><div><div class="ex-name">Plank with hip dip</div><div class="ex-detail">3 × 10/side · In forearm plank, dip hip toward floor each side · Oblique activation in an isometric position</div></div></li>
             </ul>
           </div>
           <div class="ex-sec">
@@ -981,15 +1040,6 @@ html, body {
 
   </div><!-- /scroll -->
 
-  <!-- BOTTOM NAV -->
-  <div id="nav">
-    <div class="nav-item active" onclick="nav('overview',this)"><span class="nav-icon">◎</span><span class="nav-label">Overview</span></div>
-    <div class="nav-item" onclick="nav('schedule',this)"><span class="nav-icon">📅</span><span class="nav-label">Schedule</span></div>
-    <div class="nav-item" onclick="nav('mobility',this)"><span class="nav-icon">⚡</span><span class="nav-label">Mobility</span></div>
-    <div class="nav-item" onclick="nav('nutrition',this)"><span class="nav-icon">🥩</span><span class="nav-label">Nutrition</span></div>
-    <div class="nav-item" onclick="nav('cycle',this)"><span class="nav-icon">🌙</span><span class="nav-label">Cycle</span></div>
-    <div class="nav-item" onclick="nav('progress',this)"><span class="nav-icon">📈</span><span class="nav-label">Progress</span></div>
-  </div>
 
 </div>
 
